@@ -2,7 +2,7 @@ package main
 
 import "github.com/MrShanks/goInvest/model"
 
-func InitNetworth() *Networth {
+func InitNetworth() *model.Networth {
 	simone := &model.Person{
 		Firstname: "Simone",
 		Lastname:  "Staffoli",
@@ -11,37 +11,37 @@ func InitNetworth() *Networth {
 
 	degiro := model.Account{
 		Name:     "Degiro",
-		Total:    92130.17,
+		Balance:  92130.17,
 		Currency: "CHF",
 	}
 
 	ubsMain := model.Account{
 		Name:     "UBS Main",
-		Total:    21889.92,
+		Balance:  21889.92,
 		Currency: "CHF",
 	}
 
 	ubsCommon := model.Account{
 		Name:     "UBS Common",
-		Total:    203.17,
+		Balance:  203.17,
 		Currency: "CHF",
 	}
 
 	ubsSavings := model.Account{
 		Name:     "UBS Savings",
-		Total:    15279.7,
+		Balance:  15279.7,
 		Currency: "CHF",
 	}
 
 	viac := model.Account{
 		Name:     "Viac 3a Pillar",
-		Total:    30555.67,
+		Balance:  30555.67,
 		Currency: "CHF",
 	}
 
 	bnl := model.Account{
 		Name:     "BNL",
-		Total:    297.78,
+		Balance:  297.78,
 		Currency: "EUR",
 	}
 
@@ -57,7 +57,7 @@ func InitNetworth() *Networth {
 		Currency: "CHF",
 	}
 
-	nw.Total = nw.CalculateTotal(nw.Owner.Accounts)
+	nw.Balance = nw.CalculateBalance(nw.Owner.Accounts)
 
 	return &nw
 }

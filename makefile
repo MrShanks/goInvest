@@ -7,10 +7,10 @@ DB_DSN=user=nwt_user password=networth dbname=networth host=localhost sslmode=di
 MIGRATIONS_DIR=./migrations
 
 # Run goose up
-mig_up:
+up:
 	$(GOOSE) -dir $(MIGRATIONS_DIR) $(DB_DRIVER) "$(DB_DSN)" up
 
 # Run goose down
-mig_down:
+down:
 	$(GOOSE) -dir $(MIGRATIONS_DIR) $(DB_DRIVER) "$(DB_DSN)" down
 

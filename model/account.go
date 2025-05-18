@@ -1,11 +1,14 @@
-package store
+package model
 
-import "github.com/google/uuid"
+import (
+	"github.com/MrShanks/goInvest/external"
+	"github.com/google/uuid"
+)
 
 type Account struct {
 	UUID     uuid.UUID
 	Name     string
-	Total    float64
+	Balance  float64
 	Currency string
 }
 
@@ -18,23 +21,23 @@ type Person struct {
 
 type Networth struct {
 	Owner    *Person
-	Total    float64
+	Balance  float64
 	Currency string
 }
 
-func (n *Networth) CalculateTotal(accounts []*Account) float64 {
+func (n *Networth) CalculateBalance(accounts []*Account) float64 {
 	var total float64
 	for _, acc := range accounts {
 
 		exchangeRate := 1.0
 		if acc.Currency != n.Currency {
-			chfRate := GetCurrentEchangeRate(n.Currency)
-			otherRate := GetCurrentEchangeRate(acc.Currency)
+			chfRate := external.GetCurrentEchangeRate(n.Currency)
+			otherRate := external.GetCurrentEchangeRate(acc.Currency)
 
 			exchangeRate = chfRate * otherRate
 		}
 
-		total += acc.Total * exchangeRate
+		total += acc.Balance * exchangeRate
 	}
 
 	return total

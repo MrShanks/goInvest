@@ -13,5 +13,9 @@ type AccountStore struct {
 
 func (a *AccountStore) New(acc *model.Account) {
 	q := fmt.Sprintf("INSERT INTO account (name, balance, currency) values (%s,%f,%s);", acc.Name, acc.Balance, acc.Currency)
-	a.db.Query(q)
+
+	_, err := a.db.Query(q)
+	if err != nil {
+		fmt.Printf("Couldn't insert new account: %v\n", err)
+	}
 }
