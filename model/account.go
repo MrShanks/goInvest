@@ -25,9 +25,9 @@ type Networth struct {
 	Currency string
 }
 
-func (n *Networth) CalculateBalance(accounts []*Account) float64 {
+func (n *Networth) CalculateBalance() {
 	var total float64
-	for _, acc := range accounts {
+	for _, acc := range n.Owner.Accounts {
 
 		exchangeRate := 1.0
 		if acc.Currency != n.Currency {
@@ -40,5 +40,5 @@ func (n *Networth) CalculateBalance(accounts []*Account) float64 {
 		total += acc.Balance * exchangeRate
 	}
 
-	return total
+	n.Balance = total
 }

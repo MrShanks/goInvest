@@ -3,18 +3,26 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
 	"github.com/MrShanks/goInvest/model"
 	"github.com/MrShanks/goInvest/storage"
+	"github.com/MrShanks/goInvest/store"
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	simone := &model.Person{
+		Firstname: "Simone",
+		Lastname:  "Staffoli",
+		Email:     "simonestaffoli@gmail.com",
+	}
 
-	nw := InitNetworth()
+	nw := model.Networth{
+		Owner:    simone,
+		Currency: "CHF",
+	}
 
 	fmt.Printf("Welcome to your dashboard %s %s\n", nw.Owner.Firstname, nw.Owner.Lastname)
 	fmt.Printf("Your total Networth is: %.2f CHF\n", nw.Balance)
@@ -22,21 +30,21 @@ func main() {
 	db := storage.Connect()
 	defer db.Close()
 
-	// Query the account table
-	rows, err := db.Query("SELECT name, balance, currency FROM account")
-	if err != nil {
-		log.Fatalf("Query failed: %v", err)
-	}
-	defer rows.Close()
-
-	rows.Next()
-
-	acc := &model.Account{}
-	if err := rows.Scan(&acc.Name, &acc.Balance, &acc.Currency); err != nil {
-		fmt.Println(err)
+	accStore := store.AccountStore{
+		DB: db,
 	}
 
-	fmt.Println(*acc)
+	accounts := accStore.Get()
+
+	for _, acc := range accounts {
+		fmt.Println(*acc)
+	}
+
+	nw.Owner.Accounts = accounts
+
+	nw.CalculateBalance()
+
+	fmt.Println(nw.Balance)
 }
 
 func Update(nw *model.Networth) {
@@ -59,6 +67,6 @@ func Update(nw *model.Networth) {
 		}
 	}
 
-	nw.CalculateBalance(nw.Owner.Accounts)
+	nw.CalculateBalance()
 	fmt.Printf("New Balance: %.2f\n", nw.Balance)
 }
